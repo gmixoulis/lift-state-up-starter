@@ -75,9 +75,9 @@ Complete the TODOs in each exercise file to practice lifting state up.
 **Goal**: Learn how to keep synchronized inputs with conversion logic
 
 **Tasks**:
-- Create state for temperature and scale
-- Follow the example pattern for `handleCelsiusChange` to create `handleFahrenheitChange`
-- Follow the example pattern for `celsius` to calculate `fahrenheit`
+- Create state for temperature and scale (which input was last edited)
+- Create handler functions for both Celsius and Fahrenheit inputs
+- Calculate what to display in each input based on the current state
 - Pass the correct props to both TemperatureInput components
 
 **Key Concepts**:
@@ -86,7 +86,7 @@ Complete the TODOs in each exercise file to practice lifting state up.
 - Handling bidirectional data flow
 - Converting between different representations of the same data
 
-**Note**: This exercise includes completed examples (conversion functions, one handler, one derived value) to help you understand the pattern. Study the examples, then apply the same pattern to complete the exercise!
+**Challenge**: This is the most complex exercise. You'll need to think about how to store the data once but display it in two different ways. The conversion helper functions are provided for you.
 
 ## Tips
 
@@ -94,7 +94,7 @@ Complete the TODOs in each exercise file to practice lifting state up.
 2. **Read the comments** - They contain helpful hints and guidance
 3. **Check the browser console** - TypeScript errors will appear there
 4. **Test as you go** - Make small changes and verify they work
-5. **Refer to the theory repo** - Check `../live-lifting-state-up` for working examples if you get stuck
+5. **Study the pattern summary** - Scroll down to see a general template for lifting state up
 
 ## Pattern Summary
 

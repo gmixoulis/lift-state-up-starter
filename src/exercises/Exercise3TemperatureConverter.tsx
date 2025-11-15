@@ -17,13 +17,15 @@
  * - Implement the conversion logic to keep both inputs synchronized
  * - Track which scale (celsius or fahrenheit) was last edited
  *
- * Note: Some parts are completed as examples to help you understand the pattern.
- * Follow the same pattern for the parts you need to complete!
+ * Key Concept:
+ * You need TWO pieces of state: the temperature value AND which scale it's in.
+ * Then calculate what to display in each input based on those two pieces.
  */
 
 type Scale = 'celsius' | 'fahrenheit';
 
-// ✅ COMPLETED: Conversion functions (study these!)
+// Helper functions for converting between temperature scales
+// You can use these in your solution!
 function toCelsius(fahrenheit: number): number {
   return (fahrenheit - 32) * 5 / 9;
 }
@@ -72,40 +74,26 @@ export function Exercise3TemperatureConverter() {
   // Hint: This determines whether temperature is in celsius or fahrenheit
   // const [scale, setScale] = useState<Scale>('celsius');
 
-  // ✅ COMPLETED: Example handler for Celsius input (study this pattern!)
-  // When the Celsius input changes:
-  // 1. Update the scale to 'celsius' (so we know this is the "source of truth")
+  // TODO: Create handler functions for when each input changes
+  // Hint: Each handler needs to:
+  // 1. Update the scale to match which input was changed
   // 2. Update the temperature to the new value
   // const handleCelsiusChange = (value: string) => {
-  //   setScale('celsius');
-  //   setTemperature(value);
+  //   ???
   // };
-
-  // TODO: Create a handler for when the Fahrenheit input changes
-  // Hint: Follow the same pattern as handleCelsiusChange above!
-  // - Update the scale to 'fahrenheit'
-  // - Update the temperature to the new value
   // const handleFahrenheitChange = (value: string) => {
   //   ???
   // };
 
-  // ✅ COMPLETED: Example derived value for Celsius (study this carefully!)
-  // This calculates what to show in the Celsius input:
-  // - If the user last edited Fahrenheit, convert it to Celsius
-  // - If the user last edited Celsius, show it as-is
-  // - Handle edge cases (empty or invalid input)
-  // const celsius = scale === 'fahrenheit'
-  //   ? temperature && !isNaN(Number(temperature))
-  //     ? toCelsius(Number(temperature)).toFixed(1)
-  //     : ''
-  //   : temperature;
-
-  // TODO: Calculate what to display in the Fahrenheit input
-  // Hint: Follow the SAME pattern as the celsius calculation above!
-  // - If scale is 'celsius', convert temperature to fahrenheit
-  // - If scale is 'fahrenheit', show temperature as-is
-  // - Handle empty or invalid inputs (return empty string)
-  // - Use toFahrenheit() and .toFixed(1)
+  // TODO: Calculate what to display in each input
+  // Hint: Think about this logic:
+  // - If the user last edited the Celsius input, show temperature as-is in Celsius,
+  //   and convert it to Fahrenheit for the other input
+  // - If the user last edited the Fahrenheit input, show temperature as-is in Fahrenheit,
+  //   and convert it to Celsius for the other input
+  // - Handle empty or invalid inputs by returning an empty string
+  // - Use .toFixed(1) to round to 1 decimal place after conversion
+  // const celsius = ???;
   // const fahrenheit = ???;
 
   return (
@@ -117,11 +105,7 @@ export function Exercise3TemperatureConverter() {
       </p>
       <div className="temp-converter">
         {/* TODO: Pass the correct props to each TemperatureInput */}
-        {/*
-          Hint: Uncomment the state/handlers above first, then:
-          - Celsius input needs: scale="celsius", temperature={celsius}, onTemperatureChange={handleCelsiusChange}
-          - Fahrenheit input needs: scale="fahrenheit", temperature={fahrenheit}, onTemperatureChange={handleFahrenheitChange}
-        */}
+        {/* Hint: Each input needs its scale, the calculated temperature value to display, and its change handler */}
         <TemperatureInput
           scale="celsius"
           temperature=""
