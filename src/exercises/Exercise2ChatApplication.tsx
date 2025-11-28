@@ -74,7 +74,7 @@ function MessageList(/* TODO: Add props with proper TypeScript types */) {
 }
 
 // Parent component that should manage the shared messages state
-export function Exercise2TodoList() {
+export function Exercise2ChatApplication() {
   // TODO: What state do you need to manage the messages?
   // Think about: How do you store multiple messages? How do you give each one a unique ID?
 

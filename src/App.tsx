@@ -1,6 +1,6 @@
-import { Exercise1SharedCounter } from './exercises/Exercise1SharedCounter'
-import { Exercise2TodoList } from './exercises/Exercise2TodoList'
-import { Exercise3TemperatureConverter } from './exercises/Exercise3TemperatureConverter'
+import { Exercise1MusicPlayer } from './exercises/Exercise1MusicPlayer'
+import { Exercise2ChatApplication } from './exercises/Exercise2ChatApplication'
+import { Exercise3MarkdownEditor } from './exercises/Exercise3MarkdownEditor'
 
 function App() {
   return (
@@ -11,9 +11,9 @@ function App() {
       </header>
 
       <main className="exercises-container">
-        <Exercise1SharedCounter />
-        <Exercise2TodoList />
-        <Exercise3TemperatureConverter />
+        <Exercise1MusicPlayer />
+        <Exercise2ChatApplication />
+        <Exercise3MarkdownEditor />
       </main>
     </div>
   )

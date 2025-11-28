@@ -92,7 +92,7 @@ function MarkdownPreview({
 }
 
 // Parent component that manages the shared markdown state
-export function Exercise3TemperatureConverter() {
+export function Exercise3MarkdownEditor() {
   // TODO: What state do you need?
   // Think: What's the single source of truth for the editor and preview?
 

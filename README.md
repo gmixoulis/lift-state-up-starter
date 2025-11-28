@@ -34,7 +34,7 @@ Complete the TODOs in each exercise file to practice lifting state up.
 
 ### Exercise 1: Music Player
 
-**File**: `src/exercises/Exercise1SharedCounter.tsx`
+**File**: `src/exercises/Exercise1MusicPlayer.tsx`
 
 **Goal**: Learn the basics of lifting state up
 
@@ -52,7 +52,7 @@ Complete the TODOs in each exercise file to practice lifting state up.
 
 ### Exercise 2: Chat Application
 
-**File**: `src/exercises/Exercise2TodoList.tsx`
+**File**: `src/exercises/Exercise2ChatApplication.tsx`
 
 **Goal**: Learn how to lift state when working with arrays and multiple operations
 
@@ -71,7 +71,7 @@ Complete the TODOs in each exercise file to practice lifting state up.
 
 ### Exercise 3: Markdown Editor with Live Preview
 
-**File**: `src/exercises/Exercise3TemperatureConverter.tsx`
+**File**: `src/exercises/Exercise3MarkdownEditor.tsx`
 
 **Goal**: Learn how to keep synchronized components with derived/computed values
 

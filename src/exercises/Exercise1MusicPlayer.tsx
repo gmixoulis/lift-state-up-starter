@@ -11,7 +11,7 @@
  * - Currently, the state is not accessible to both components
  *
  * Your Task:
- * - Lift the music player state up to the parent component (Exercise1SharedCounter)
+ * - Lift the music player state up to the parent component (Exercise1MusicPlayer)
  * - Pass the state down to NowPlaying as props
  * - Pass handler functions down to PlayerControls as props
  * - Make both components work together with shared state
@@ -55,7 +55,7 @@ function PlayerControls(/* Add props here */) {
 }
 
 // Parent component that should hold the shared state
-export function Exercise1SharedCounter() {
+export function Exercise1MusicPlayer() {
   // TODO: What state do you need to track?
   // Think about: Which song is currently selected? Is it playing or paused?
 
