@@ -1,120 +1,132 @@
 // TODO: Import useState from React
-// import { useState } from "react";
 
 /**
- * Exercise 3: Temperature Converter
+ * Exercise 3: Markdown Editor with Live Preview
  *
- * Goal: Learn how to lift state up when multiple inputs need to stay synchronized
+ * Goal: Learn how to keep synchronized components with derived/computed values
  *
  * Current Problem:
- * - Two input fields (Celsius and Fahrenheit) need to show the same temperature
- * - When you change one, the other should update automatically
- * - We need a single source of truth for the temperature value
+ * - The MarkdownInput and MarkdownPreview need to stay in sync
+ * - When you type in the input, the preview should update automatically
+ * - We need a single source of truth for the markdown content
  *
  * Your Task:
- * - Lift the temperature state up to the parent component
- * - Create separate change handlers for each input
- * - Implement the conversion logic to keep both inputs synchronized
- * - Track which scale (celsius or fahrenheit) was last edited
+ * - Lift the markdown text state up to the parent component
+ * - Create a change handler for the input
+ * - Pass the text to both the input (for editing) and preview (for displaying)
+ * - Implement basic markdown rendering in the preview
  *
  * Key Concept:
- * You need TWO pieces of state: the temperature value AND which scale it's in.
- * Then calculate what to display in each input based on those two pieces.
+ * The preview is a "derived value" - it's computed from the markdown text.
+ * One piece of state (the raw text) drives two different views.
  */
 
-type Scale = 'celsius' | 'fahrenheit';
+// You'll implement a function to convert markdown to HTML below
+// Research: How does String.replace() work with regex patterns?
 
-// Helper functions for converting between temperature scales
-// You can use these in your solution!
-function toCelsius(fahrenheit: number): number {
-  return (fahrenheit - 32) * 5 / 9;
-}
-
-function toFahrenheit(celsius: number): number {
-  return (celsius * 9 / 5) + 32;
-}
-
-// Child component for temperature input
-function TemperatureInput({
-  scale,
-  temperature,
-  onTemperatureChange
+// Child component for markdown input
+function MarkdownInput({
+  text,
+  onTextChange
 }: {
-  scale: Scale;
-  temperature: string;
-  onTemperatureChange: (value: string) => void;
+  text: string;
+  onTextChange: (value: string) => void;
 }) {
-  const scaleNames = {
-    celsius: 'Celsius',
-    fahrenheit: 'Fahrenheit'
-  };
-
   return (
-    <div className="temp-input-group">
-      <label className="temp-label">
-        Enter temperature in {scaleNames[scale]}:
-      </label>
-      <input
-        type="number"
-        value={temperature}
-        onChange={(e) => onTemperatureChange(e.target.value)}
-        placeholder={`°${scale === 'celsius' ? 'C' : 'F'}`}
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <h3>Editor</h3>
+      <textarea
+        value={text}
+        onChange={(e) => onTextChange(e.target.value)}
+        placeholder="Type markdown here...
+# Heading
+**bold** *italic*
+- List item"
+        style={{
+          width: "100%",
+          minHeight: "200px",
+          padding: "12px",
+          fontFamily: "monospace",
+          fontSize: "14px",
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          resize: "vertical"
+        }}
       />
+      <p style={{ fontSize: "0.8em", color: "#666", marginTop: "8px" }}>
+        Character count: {text.length}
+      </p>
     </div>
   );
 }
 
-// Parent component that manages the shared temperature state
+// Child component for markdown preview
+function MarkdownPreview({
+  text,
+  renderMarkdown
+}: {
+  text: string;
+  renderMarkdown: (markdown: string) => string;
+}) {
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <h3>Preview</h3>
+      <div
+        style={{
+          width: "100%",
+          minHeight: "200px",
+          padding: "12px",
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          backgroundColor: "#f9f9f9"
+        }}
+      >
+        {text ? (
+          <div dangerouslySetInnerHTML={{ __html: renderMarkdown(text) }} />
+        ) : (
+          <p style={{ color: "#999" }}>Preview will appear here...</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Parent component that manages the shared markdown state
 export function Exercise3TemperatureConverter() {
-  // TODO: Create state for the temperature value
-  // Hint: Store it as a string to handle empty inputs
-  // const [temperature, setTemperature] = useState('');
+  // TODO: What state do you need?
+  // Think: What's the single source of truth for the editor and preview?
 
-  // TODO: Create state to track which scale was last edited
-  // Hint: This determines whether temperature is in celsius or fahrenheit
-  // const [scale, setScale] = useState<Scale>('celsius');
+  // TODO: Create a change handler
+  // What happens when the user types in the editor?
 
-  // TODO: Create handler functions for when each input changes
-  // Hint: Each handler needs to:
-  // 1. Update the scale to match which input was changed
-  // 2. Update the temperature to the new value
-  // const handleCelsiusChange = (value: string) => {
-  //   ???
-  // };
-  // const handleFahrenheitChange = (value: string) => {
-  //   ???
-  // };
-
-  // TODO: Calculate what to display in each input
-  // Hint: Think about this logic:
-  // - If the user last edited the Celsius input, show temperature as-is in Celsius,
-  //   and convert it to Fahrenheit for the other input
-  // - If the user last edited the Fahrenheit input, show temperature as-is in Fahrenheit,
-  //   and convert it to Celsius for the other input
-  // - Handle empty or invalid inputs by returning an empty string
-  // - Use .toFixed(1) to round to 1 decimal place after conversion
-  // const celsius = ???;
-  // const fahrenheit = ???;
+  // TODO: Create a function to convert markdown to HTML
+  // Research: How does String.replace() work with regex?
+  // Try handling these cases:
+  // - # Heading → <h1>Heading</h1>
+  // - **bold** → <strong>bold</strong>
+  // - *italic* → <em>italic</em>
+  // - - List item → <li>List item</li>
+  // Challenge: How do you wrap multiple <li> elements in a <ul>?
 
   return (
     <div className="exercise-card">
-      <h2>Exercise 3: Temperature Converter</h2>
+      <h2>Exercise 3: Markdown Editor</h2>
       <p>
-        Both input fields need to stay in sync. Lift the temperature state up
-        and handle conversions in the parent component.
+        The editor and preview need to stay in sync. Lift the markdown text state up
+        and pass it to both components.
       </p>
-      <div className="temp-converter">
-        {/* TODO: Pass the correct props to each TemperatureInput */}
-        {/* Hint: Each input needs its scale, the calculated temperature value to display, and its change handler */}
-        <TemperatureInput
-          scale="celsius"
-          temperature=""
-          onTemperatureChange={() => {}}
+
+      <div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
+        {/* TODO: What props does the input need? */}
+        <MarkdownInput
+          text=""
+          onTextChange={() => {}}
         />
-        <TemperatureInput
-          scale="fahrenheit"
-          temperature=""
-          onTemperatureChange={() => {}}
+
+        {/* TODO: What props does the preview need? */}
+        <MarkdownPreview
+          text=""
+          renderMarkdown={(md) => md}
         />
       </div>
     </div>

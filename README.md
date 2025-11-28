@@ -32,61 +32,63 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 Complete the TODOs in each exercise file to practice lifting state up.
 
-### Exercise 1: Shared Counter
+### Exercise 1: Music Player
 
 **File**: `src/exercises/Exercise1SharedCounter.tsx`
 
 **Goal**: Learn the basics of lifting state up
 
 **Tasks**:
-- Create state in the parent component for the counter value
-- Pass the counter value down to the display component via props
-- Pass handler functions down to the controls component via props
-- Wire up the increment, decrement, and reset buttons
+- Create state in the parent for current song index and playing status
+- Pass the current song and status to the NowPlaying display component
+- Pass handler functions to the PlayerControls component
+- Implement play/pause, next, and previous functionality with proper wrapping
 
 **Key Concepts**:
-- Parent component holds the state
+- Parent component holds multiple pieces of related state
 - Child components receive data via props
 - Child components communicate with parent via callback functions
+- Handling state that affects multiple child components
 
-### Exercise 2: Todo List
+### Exercise 2: Chat Application
 
 **File**: `src/exercises/Exercise2TodoList.tsx`
 
-**Goal**: Learn how to lift state when working with arrays
+**Goal**: Learn how to lift state when working with arrays and multiple operations
 
 **Tasks**:
-- Create state in the parent for the todos array and next ID
-- Implement the `handleAddTodo` function
-- Implement the `handleDeleteTodo` function
-- Pass the correct props to TodoInput and TodoListDisplay
-- Complete the TodoListDisplay to render the todos
+- Create state in the parent for the messages array and next ID
+- Implement the `handleSendMessage` function to add new messages
+- Implement the `handleReact` function to increment reaction counts
+- Pass the correct props to MessageInput and MessageList
+- Complete the MessageList to render messages with reactions
 
 **Key Concepts**:
 - Managing array state in the parent
+- Multiple operations on the same data (add items, update items)
+- Using array methods (map for updates, spread for additions)
 - Passing both data and event handlers down
-- Using array methods (map, filter) without mutating state
-- Handling form submissions
 
-### Exercise 3: Temperature Converter
+### Exercise 3: Markdown Editor with Live Preview
 
 **File**: `src/exercises/Exercise3TemperatureConverter.tsx`
 
-**Goal**: Learn how to keep synchronized inputs with conversion logic
+**Goal**: Learn how to keep synchronized components with derived/computed values
 
 **Tasks**:
-- Create state for temperature and scale (which input was last edited)
-- Create handler functions for both Celsius and Fahrenheit inputs
-- Calculate what to display in each input based on the current state
-- Pass the correct props to both TemperatureInput components
+- Create state for the markdown text
+- Create a change handler for the input
+- Implement the `renderMarkdown` function to convert markdown to HTML
+- Pass the text and handlers to both MarkdownInput and MarkdownPreview
+- Connect the editor and preview so they stay in sync
 
 **Key Concepts**:
 - Single source of truth for shared data
-- Computed/derived values
-- Handling bidirectional data flow
-- Converting between different representations of the same data
+- Derived/computed values (preview is computed from the raw text)
+- One piece of state driving multiple different views
+- Processing data before display
 
-**Challenge**: This is the most complex exercise. You'll need to think about how to store the data once but display it in two different ways. The conversion helper functions are provided for you.
+**Challenge**: This exercise introduces the concept of derived state - the preview is not stored separately, but computed from the markdown text. You'll also practice basic string manipulation with regex.
 
 ## Tips
 
