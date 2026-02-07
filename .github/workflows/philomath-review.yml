@@ -1,0 +1,61 @@
+name: 'Philomath AI REVIEWER'
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened] # Triggers when they open the PR or push more code to it
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number"
+        required: true
+      review_scope:
+        description: "commit or pr"
+        required: false
+        default: "commit"
+      exercise_id:
+        description: "exercise id"
+        required: false
+        default: "ex-004"
+
+jobs:
+  run-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read        # Required for actions/checkout to read the repository
+      pull-requests: write  # Allow posting to the Discussion tab
+    steps:
+       # Step 1: Checkout the student's code (Standard)
+      - name: Checkout Student Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Required so 'git diff' can see the change
+
+        # Step 2: Checkout YOUR Engine from Org 2 (The Bridge)
+      - name: Checkout Philomath Engine
+        uses: actions/checkout@v4
+        with:
+          repository: Philomath-Academy/code-review-engine # Your Engine Org/Repo
+          token: ${{ secrets.CORE_TOKEN }}                # Your PAT with repo scope
+          path: .philomath-engine
+
+      - name: Check engine action.yml
+        run: |
+         ls -la .philomath-engine
+         find .philomath-engine -maxdepth 2 -iname "action.y*ml" -print
+   
+        # Optional debug (highly recommended once)
+
+      - name: Debug engine folder
+        run: |
+          ls -la
+          ls -la .philomath-engine
+          
+      - name: Run Philomath Review
+        uses: ./.philomath-engine 
+        with:
+          exercise_id: 'ex-004'
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          core_token: ${{ secrets.CORE_TOKEN }}
+        env:
+          REVIEW_SCOPE: ${{ inputs.review_scope || (github.event.action == 'synchronize' && 'commit' || 'pr') }}
+          PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
