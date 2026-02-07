@@ -1,0 +1,37 @@
+name: 'Philomath AI REVIEWER (Comment Trigger)'
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  run-review:
+    if: >
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/review')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout Student Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Checkout Philomath Engine
+        uses: actions/checkout@v4
+        with:
+          repository: Philomath-Academy/code-review-engine
+          token: ${{ secrets.CORE_TOKEN }}
+          path: .philomath-engine
+
+      - name: Run Philomath Review
+        uses: ./.philomath-engine
+        with:
+          exercise_id: 'ex-004'
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          core_token: ${{ secrets.CORE_TOKEN }}
+        env:
+          REVIEW_SCOPE: pr
+          PR_NUMBER: ${{ github.event.issue.number }}
