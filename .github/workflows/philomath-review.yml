@@ -2,7 +2,7 @@ name: 'Philomath AI REVIEWER'
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened] # Triggers when they open the PR or push more code to it
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       pr_number:
@@ -15,47 +15,45 @@ on:
       exercise_id:
         description: "exercise id"
         required: false
-        default: "ex-004"
+        default: "ex-XXX" # <-- Change to your exercise ID
 
 jobs:
   run-review:
     runs-on: ubuntu-latest
     permissions:
-      contents: read        # Required for actions/checkout to read the repository
-      pull-requests: write  # Allow posting to the Discussion tab
+      contents: read
+      pull-requests: write
     steps:
-       # Step 1: Checkout the student's code (Standard)
+      - name: Validate exercise ID
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          ID="${{ inputs.exercise_id }}"
+          if [[ ! "$ID" =~ ^ex-[0-9]{3}$ ]]; then
+            echo "::error::Invalid exercise_id '$ID' — expected format: ex-NNN (e.g. ex-006)"
+            exit 1
+          fi
+
       - name: Checkout Student Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2 # Required so 'git diff' can see the change
+          fetch-depth: 2
 
-        # Step 2: Checkout YOUR Engine from Org 2 (The Bridge)
       - name: Checkout Philomath Engine
         uses: actions/checkout@v4
         with:
-          repository: Philomath-Academy/code-review-engine # Your Engine Org/Repo
-          token: ${{ secrets.CORE_TOKEN }}                # Your PAT with repo scope
+          repository: Philomath-Academy/code-review-engine
+          ref: main
+          token: ${{ secrets.CORE_TOKEN }}
           path: .philomath-engine
 
-      - name: Check engine action.yml
-        run: |
-         ls -la .philomath-engine
-         find .philomath-engine -maxdepth 2 -iname "action.y*ml" -print
-   
-        # Optional debug (highly recommended once)
-
-      - name: Debug engine folder
-        run: |
-          ls -la
-          ls -la .philomath-engine
-          
       - name: Run Philomath Review
-        uses: ./.philomath-engine 
+        uses: ./.philomath-engine
         with:
-          exercise_id: 'ex-004'
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          exercise_id: ${{ inputs.exercise_id || 'ex-004' }} # <-- Change to your exercise ID
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           core_token: ${{ secrets.CORE_TOKEN }}
         env:
+          LLM_PROVIDER: anthropic
           REVIEW_SCOPE: ${{ inputs.review_scope || (github.event.action == 'synchronize' && 'commit' || 'pr') }}
           PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
+          MAX_TOKEN_BUDGET: '20000'
