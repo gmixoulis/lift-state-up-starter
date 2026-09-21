@@ -1,5 +1,5 @@
 // TODO: Import useState from React
-
+import { useState } from 'react';
 /**
  * Exercise 1: Music Player
  *
@@ -22,6 +22,18 @@ type Song = {
   artist: string;
 };
 
+type NowPlayingProps = {
+  currentSong: Song;
+  isPlaying: boolean;
+};
+
+type PlayerControlsProps = {
+  isPlaying: boolean;
+  onPrevious: () => void;
+  onTogglePlay: () => void;
+  onNext: () => void;
+};
+
 const playlist: Song[] = [
   { title: "Bohemian Rhapsody", artist: "Queen" },
   { title: "Hotel California", artist: "Eagles" },
@@ -30,39 +42,50 @@ const playlist: Song[] = [
 
 // TODO: Add proper type definitions for the props
 // What information does the display need to show the current song and status?
-function NowPlaying(/* Add props here */) {
+function NowPlaying({ currentSong, isPlaying }: NowPlayingProps) {
   return (
     <div className="counter-display">
       {/* TODO: Display the current song and playing status from props */}
-      <h3>Now Playing: ???</h3>
-      <p>Artist: ???</p>
-      <p>Status: ???</p>
+      <h3>Now Playing: {currentSong.title}</h3>
+      <p>Artist: {currentSong.artist}</p>
+      <p>Status: {isPlaying ? "Playing" : "Paused"}</p>
     </div>
   );
 }
 
 // TODO: Add proper type definitions for the props
 // What actions can the user perform? What handlers do you need?
-function PlayerControls(/* Add props here */) {
+function PlayerControls({ isPlaying, onPrevious, onTogglePlay, onNext }: PlayerControlsProps) {
   return (
     <div className="button-group">
       {/* TODO: Wire up the button onClick handlers */}
-      <button type="button">⏮ Previous</button>
-      <button type="button">⏯ Play/Pause</button>
-      <button type="button">⏭ Next</button>
+      <button type="button" onClick={onPrevious}>⏮ Previous</button>
+      <button type="button" onClick={onTogglePlay}>
+        {isPlaying ? '⏸ Pause' : '▶ Play'}
+      </button>
+      <button type="button" onClick={onNext}>⏭ Next</button>
     </div>
   );
 }
 
 // Parent component that should hold the shared state
 export function Exercise1MusicPlayer() {
-  // TODO: What state do you need to track?
-  // Think about: Which song is currently selected? Is it playing or paused?
 
-  // TODO: Create handler functions
-  // What should happen when each button is clicked?
-  // How do you move to the next song? What happens at the end of the playlist?
-  // How do you move to the previous song? What happens at the start?
+  const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handleTogglePlay = () => {
+    setIsPlaying((previous) => !previous);
+  };
+  const handleNext = () => {
+    setCurrentSongIndex((previousIndex) => (previousIndex + 1) % playlist.length);
+  };
+  const handlePrevious = () => {
+    setCurrentSongIndex((previousIndex) =>
+      previousIndex === 0 ? playlist.length - 1 : previousIndex - 1
+    );
+  };
+
 
   return (
     <div className="exercise-card">
@@ -74,11 +97,11 @@ export function Exercise1MusicPlayer() {
 
       {/* TODO: Pass the necessary props to NowPlaying */}
       {/* What data does it need to display? */}
-      <NowPlaying />
+      <NowPlaying currentSong={playlist[currentSongIndex]} isPlaying={isPlaying} />
 
       {/* TODO: Pass the necessary props to PlayerControls */}
       {/* What functions does it need to modify the state? */}
-      <PlayerControls />
+      <PlayerControls onPrevious={handlePrevious} onTogglePlay={handleTogglePlay} onNext={handleNext} isPlaying={isPlaying} />
     </div>
   );
 }
