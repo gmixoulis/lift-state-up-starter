@@ -24,8 +24,13 @@ export type Message = {
   reactions: number;
 };
 
+type MessageInputProps={
+  onSendMessage: (message: string) => void;
+}
+
+
 // Child component for sending new messages
-function MessageInput(/* TODO: Add props with proper TypeScript types */) {
+function MessageInput({onSendMessage}: MessageInputProps) {
   // This component manages its own input field state (not lifted up)
   // Only the messages array is lifted up
   const [messageText, setMessageText] = useState("");
@@ -35,6 +40,7 @@ function MessageInput(/* TODO: Add props with proper TypeScript types */) {
     if (messageText.trim()) {
       // TODO: How do you tell the parent component about the new message?
       // What information does the parent need?
+      onSendMessage(messageText.trim())
       setMessageText("");
     }
   };
@@ -52,40 +58,69 @@ function MessageInput(/* TODO: Add props with proper TypeScript types */) {
   );
 }
 
+type MessageListProps ={
+  messages: Message[];
+  onReact: (id: number) => void;
+}
+
 // Child component for displaying messages
-function MessageList(/* TODO: Add props with proper TypeScript types */) {
+function MessageList({messages,onReact}: MessageListProps) {
   // TODO: What data does this component need from the parent?
   // What actions can the user perform on messages?
 
   // TODO: What should display when there are no messages?
 
+  
+
   return (
     <div>
-      {/* TODO: How many messages are there? */}
-      <p>??? message(s)</p>
+      <p>{messages.length} message(s)</p>
 
-      <ul className="item-list">
-        {/* TODO: How do you render a list of messages in React? */}
-        {/* What should each message item display? */}
-        {/* How does a user add a reaction? */}
-      </ul>
+      {messages.length === 0 ? (
+        <p className="empty-message">No messages yet.</p>
+      ) : (
+        <ul className="item-list">
+          {messages.map((message) => (
+            <li key={message.id}>
+              <span>
+                <strong>{message.username}: </strong>
+                {message.text}
+              </span>
+              <button type="button" onClick={() => onReact(message.id)}>
+                ❤️ {message.reactions}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
 
 // Parent component that should manage the shared messages state
 export function Exercise2ChatApplication() {
-  // TODO: What state do you need to manage the messages?
-  // Think about: How do you store multiple messages? How do you give each one a unique ID?
 
-  // TODO: Create a handler to add a new message
-  // What parameters does it need?
-  // How do you add to an array without mutating it?
-  // How do you generate the next ID?
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [nextId, setNextId] = useState(1);
 
-  // TODO: Create a handler to add a reaction to a message
-  // How do you find the right message?
-  // How do you update one item in an array immutably?
+  const handleSendMessage = (message: string) => {
+    const newMessage: Message = {
+      username: "User",
+      text: message,
+      id: nextId,
+      reactions: 0,
+    };
+    setNextId((previousId) => previousId + 1);
+    setMessages((previousMessages) => [...previousMessages, newMessage]);
+  };
+
+  const handleReact = (id: number) => {
+    setMessages((previousMessages) =>
+      previousMessages.map((message) =>
+        message.id === id ? { ...message, reactions: message.reactions + 1 } : message
+      )
+    );
+  };
 
   return (
     <div className="exercise-card">
@@ -96,10 +131,13 @@ export function Exercise2ChatApplication() {
       </p>
 
       {/* TODO: What props does MessageList need? */}
-      <MessageList />
+      <MessageList 
+      messages={messages}
+      onReact={handleReact}
+      />
 
       {/* TODO: What props does MessageInput need? */}
-      <MessageInput />
+      <MessageInput onSendMessage={handleSendMessage} />
     </div>
   );
 }
