@@ -1,5 +1,5 @@
 // TODO: Import useState from React
-
+import { useState } from "react";
 /**
  * Exercise 3: Markdown Editor with Live Preview
  *
@@ -96,17 +96,16 @@ export function Exercise3MarkdownEditor() {
   // TODO: What state do you need?
   // Think: What's the single source of truth for the editor and preview?
 
-  // TODO: Create a change handler
-  // What happens when the user types in the editor?
+  const [text, setText] = useState("");
 
-  // TODO: Create a function to convert markdown to HTML
-  // Research: How does String.replace() work with regex?
-  // Try handling these cases:
-  // - # Heading → <h1>Heading</h1>
-  // - **bold** → <strong>bold</strong>
-  // - *italic* → <em>italic</em>
-  // - - List item → <li>List item</li>
-  // Challenge: How do you wrap multiple <li> elements in a <ul>?
+  const renderMarkdown= (text: string) =>{
+    return text.replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/^- (.*$)/gim, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>(?:\s*<li>.*<\/li>)*)/g, '<ul>$1</ul>');
+  }
+
 
   return (
     <div className="exercise-card">
@@ -119,14 +118,14 @@ export function Exercise3MarkdownEditor() {
       <div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
         {/* TODO: What props does the input need? */}
         <MarkdownInput
-          text=""
-          onTextChange={() => {}}
+          text={text}
+          onTextChange={setText}
         />
 
         {/* TODO: What props does the preview need? */}
         <MarkdownPreview
-          text=""
-          renderMarkdown={(md) => md}
+          text={text}
+          renderMarkdown={renderMarkdown}
         />
       </div>
     </div>
